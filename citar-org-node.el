@@ -6,7 +6,7 @@
 ;; URL: https://github.com/krisbalintona/citar-org-node
 ;; Keywords: tools
 ;; Package-Version: 0.2.0
-;; Package-Requires: ((emacs "25.1") (citar "1.2.0"))
+;; Package-Requires: ((emacs "25.1") (citar "1.1") (org-node "2.0.0") (ht "1.6"))
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -27,6 +27,9 @@
 
 ;;; Code:
 (require 'citar)
+(require 'org-node)
+(require 'ht)
+(require 'org-capture)
 
 ;;; Options
 (defgroup citar-org-node nil

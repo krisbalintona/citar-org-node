@@ -98,7 +98,9 @@ keys are in this list will be included in the final hash table."
 (defun citar-org-node--get-candidates (&optional citekeys)
   "Return hash table mapping of CITEKEYS to completion candidates.
 Return hash table whose CITEKEYS are elements of CITEKEYS and values are
-the propertized candidate used for completion.
+the propertized candidate used for completion.  (Note: this text will be
+the raw candidate text, but citar completion menus will show other
+text.)
 
 If CITEKEYS is nil, then return a hash table for all existent CITEKEYS
 with their files.

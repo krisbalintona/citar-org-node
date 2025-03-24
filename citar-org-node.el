@@ -42,21 +42,21 @@
 See `citar-notes-sources' for more details on configuration keys.")
 
 ;;; Functions
-(defun citar-org-node--get-citekey-refs (&optional ref-paths)
+(defun citar-org-node--get-citekey-refs (&optional citekeys)
   "Return `org-node--ref-path<>ref-type' with only citekeys.
 `org-node--ref-path<>ref-type' stores refs of any type (e.g., citekeys,
 https).  This function removes (non-destructively) non-citekey pairs
 from the hash table, returning the result.
 
-The optional argument REF-PATHS should be a list of ref-paths.  If
-non-nil, only the keys-value pairs whose keys are in this list will be
-included in the final hash table."
-  (when (and ref-paths (not (listp ref-paths)))
-    (error "REF-PATHS should be a list"))
+The optional argument CITEKEYS should be a list of org-node
+ref-paths (i.e. citekeys).  If non-nil, only the keys-value pairs whose
+keys are in this list will be included in the final hash table."
+  (when (and citekeys (not (listp citekeys)))
+    (error "CITEKEYS should be a list"))
   (let ((filtered-hash-table (make-hash-table :test #'equal)))
-    (if ref-paths
+    (if citekeys
         (maphash (lambda (ref-path ref-type)
-                   (when (member ref-path ref-paths)
+                   (when (member ref-path citekeys)
                      (puthash ref-path ref-type filtered-hash-table)))
                  org-node--ref-path<>ref-type)
       (setq filtered-hash-table org-node--ref-path<>ref-type))
@@ -64,13 +64,13 @@ included in the final hash table."
                  (string-equal ref-type (concat "@" ref-path)))
                filtered-hash-table)))
 
-(defun citar-org-node--get-candidates (&optional keys)
-  "Return hash table mapping of KEYS to completion candidates.
-Return hash table whose keys are elements of KEYS and values are the
-propertized candidate used for completion.
+(defun citar-org-node--get-candidates (&optional citekeys)
+  "Return hash table mapping of CITEKEYS to completion candidates.
+Return hash table whose CITEKEYS are elements of CITEKEYS and values are
+the propertized candidate used for completion.
 
-If KEYS is nil, then return a hash table for all existent keys with
-their files.
+If CITEKEYS is nil, then return a hash table for all existent CITEKEYS
+with their files.
 
 See `citar-file--get-notes' for an example implementation.
 
@@ -81,7 +81,7 @@ See also `citar-org-node-notes-config'."
                                     (title (org-node-get-title node)))
                                ;; Final list elements are:
                                (list id ref-path title)))
-                           (citar-org-node--get-citekey-refs keys)))
+                           (citar-org-node--get-citekey-refs citekeys)))
         (cands (make-hash-table :test #'equal)))
     (pcase-dolist (`(,id ,citekey ,title) node-info)
       (push
@@ -95,7 +95,8 @@ See also `citar-org-node-notes-config'."
 
 (defun citar-org-node-has-notes ()
   "Return function to check for notes.
-When given a citekey, return non-nil if there's an associated note.
+The returned function, when given a citekey, will return non-nil if
+there's an associated note.
 
 See also `citar-org-node-notes-config'."
   (let ((hasnotes (make-hash-table :test 'equal))

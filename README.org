@@ -1,0 +1,54 @@
+# -*- eval: (org-make-toc-mode 1); -*-
+#+title: Citar-org-node
+
+This package integrates [[https://github.com/meedstrom/org-node][org-node]] with the popular bibliographic management package, [[https://github.com/emacs-citar/citar][citar]].
+
+* Table of contents
+:PROPERTIES:
+:TOC:      :include all :force (nothing) :ignore (this) :local (nothing)
+:END:
+:CONTENTS:
+- [[#installation][Installation]]
+- [[#usage][Usage]]
+  - [[#options][Options]]
+:END:
+
+* Installation
+:PROPERTIES:
+:CUSTOM_ID: installation
+:END:
+
+This package is currently not available in any package archives. You should download this repository locally then add it to your load path.
+
+Alternatively, if you an Emacs version of at least 29.1, you can use ~package-vc-install~:
+#+begin_src emacs-lisp
+  (unless (package-installed-p 'citar-org-node)
+    (package-vc-install '(citar-org-node :url "https://github.com/krisbalintona/citar-org-node.git"
+                                         :rev :newest)))
+
+  ;; Or with use-package:
+  (use-package citar-org-node
+    :vc ( :url "https://github.com/krisbalintona/citar-org-node.git"
+          :rev :newest))
+#+end_src
+
+* Usage
+:PROPERTIES:
+:CUSTOM_ID: usage
+:END:
+
+Simply use citar as normal! Citar will be aware of your nodes associated with bibliographic references (via the =ROAM_REFS= property).
+
+To see all commands available, do =C-h a citar-org-node- RET=, or =M-x apropos-command citar-org-node- RET=.
+
+** Options
+:PROPERTIES:
+:CUSTOM_ID: options
+:END:
+
+The most notable user options are:
++ ~citar-org-node-mode~ :: Enable this package's functionality.
++ ~citar-org-node-new-node-title-template~ :: The citar formatting template for newly created nodes.
++ ~citar-org-node-fallback-org-capture-template-key~ :: Key used as the template key when selecting capture template for new note.
+
+To see all user options available, do =C-h u citar-org-node- RET=, or =M-x apropos-user-option citar-org-node- RET=.

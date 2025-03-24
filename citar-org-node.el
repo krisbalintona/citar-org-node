@@ -49,7 +49,7 @@ See also `citar-org-node-fallback-org-capture-template-key'."
   :type 'string)
 
 (defcustom citar-org-node-fallback-org-capture-template-key nil
-  "Key used in the org-capture menu for the fallback template.
+  "Key used in the `org-capture' menu for the fallback template.
 This should be a single letter string like that used in
 `org-capture-templates'.  This key will be assigned to the fallback
 capture template of citar-org-node: a basic call to

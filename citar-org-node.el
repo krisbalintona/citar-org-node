@@ -40,7 +40,7 @@
 ;; TODO 2025-03-24: More specific explanation for what templates and fields are,
 ;; and how to tell which fields are available and what they expand to?
 (defcustom citar-org-node-new-node-title-template "${title} by ${author} (${date})"
-  "The citar formatting template for newly created nodes.
+  "The citar formatting template for titles of newly created nodes.
 For an example of what this string should look like and the possible
 fields, see `citar-templates'.  Configuring this variable also allows
 citar to expand more fields, corresponding to bibliography file fields.
@@ -49,7 +49,7 @@ See also `citar-org-node-fallback-org-capture-template-key'."
   :type 'string)
 
 (defcustom citar-org-node-fallback-org-capture-template-key nil
-  "Key used as the template key when selecting capture template for new note.
+  "Key used in the org-capture menu for the fallback template.
 This should be a single letter string like that used in
 `org-capture-templates'.  This key will be assigned to the fallback
 capture template of citar-org-node: a basic call to

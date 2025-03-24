@@ -47,8 +47,7 @@ To see all commands available, do =C-h a citar-org-node- RET=, or =M-x apropos-c
 :END:
 
 The most notable user options are:
-+ ~citar-org-node-mode~ :: Enable this package's functionality.
-+ ~citar-org-node-new-node-title-template~ :: The citar formatting template for newly created nodes.
-+ ~citar-org-node-fallback-org-capture-template-key~ :: Key used as the template key when selecting capture template for new note.
++ ~citar-org-node-new-node-title-template~ :: The citar formatting template for titles of newly created nodes.
++ ~citar-org-node-fallback-org-capture-template-key~ :: Key used in the org-capture menu for the fallback template when creating a new note.
 
 To see all user options available, do =C-h u citar-org-node- RET=, or =M-x apropos-user-option citar-org-node- RET=.

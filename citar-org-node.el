@@ -34,8 +34,14 @@
   :prefix "citar-org-node-"
   :group 'org)
 
-(defcustom citar-org-node-new-node-title-template "${title}"
-  "The citar formatting template for newly created nodes.")
+;; TODO 2025-03-24: More specific explanation for what templates and fields are,
+;; and how to tell which fields are available and what they expand to?
+(defcustom citar-org-node-new-node-title-template "${title} by ${author} (${date})"
+  "The citar formatting template for newly created nodes.
+For an example of what this string should look like and the possible
+fields, see `citar-templates'.  Configuring this variable also allows
+citar to expand more fields, corresponding to bibliography file fields."
+  :type 'string)
 
 ;;; Variables
 (defconst citar-org-node-notes-config

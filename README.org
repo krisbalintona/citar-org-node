@@ -37,7 +37,7 @@ Alternatively, if you an Emacs version of at least 29.1, you can use ~package-vc
 :CUSTOM_ID: usage
 :END:
 
-Simply use citar as normal! Citar will be aware of your nodes associated with bibliographic references (via the =ROAM_REFS= property).
+Enable ~citar-org-node-mode~ and simply use citar as normal! Citar will be aware of your nodes associated with bibliographic references (via the =ROAM_REFS= property).
 
 To see all commands available, do =C-h a citar-org-node- RET=, or =M-x apropos-command citar-org-node- RET=.
 

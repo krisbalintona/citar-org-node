@@ -40,8 +40,23 @@
   "The citar formatting template for newly created nodes.
 For an example of what this string should look like and the possible
 fields, see `citar-templates'.  Configuring this variable also allows
-citar to expand more fields, corresponding to bibliography file fields."
+citar to expand more fields, corresponding to bibliography file fields.
+
+See also `citar-org-node-fallback-org-capture-template-key'."
   :type 'string)
+
+(defcustom citar-org-node-fallback-org-capture-template-key nil
+  "Key used as the template key when selecting capture template for new note.
+This should be a single letter string like that used in
+`org-capture-templates'.  This key will be assigned to the fallback
+capture template of citar-org-node: a basic call to
+`org-node-capture-target', which creates a new file with a title
+determined by `citar-org-node-new-node-title-template'.
+
+If this variable is nil, then a key that is not taken will automatically
+be chosen (see `citar-org-node--available-org-capture-key')."
+  :type '(choice (const :tag "Off" nil)
+                 (string :tag "Your own choice of key")))
 
 ;;; Variables
 (defconst citar-org-node-notes-config
@@ -132,6 +147,30 @@ See also `citar-org-node-notes-config'."
              (car (split-string candidate-string)))))
     (org-node--goto (org-node-by-id id))))
 
+(defun citar-org-node--available-org-capture-key ()
+  "Returns a key available for being bound in the `org-capture' menu.
+A \"key\" will be a single-letter string.
+
+Meant for use in `citar-org-node--create-capture-note' to dynamically
+create a template and assign it a key that is guaranteed to be
+available.
+
+If the keys already occupied by the user in `org-capture-templates'
+remains the same, then the key returned by this function will also
+remain the same."
+  (let* ((taken-keys (cl-loop for template in org-capture-templates
+                              when (stringp (car template))
+                              collect (string-to-char (car template))))
+         ;; TODO 2025-03-24: We keep this to the alphabet for simplicity, but
+         ;; technically if a user has a capture template for on every letter,
+         ;; this fails
+         (all-letters (append (number-sequence ?a ?z) (number-sequence ?A ?Z)))
+         (available-keys (seq-difference all-letters taken-keys))
+         (sorted-available-keys (sort available-keys #'<))
+         (hash-value (abs (sxhash (prin1-to-string taken-keys))))
+         (index (mod hash-value (length sorted-available-keys))))
+    (char-to-string (nth index sorted-available-keys))))
+
 (defun citar-org-node-add-ref (citekey)
   "Add CITEKEY to the nearest relevant property drawer.
 CITEKEY will be the value of the \"ROAM_REFS\" property.
@@ -140,18 +179,41 @@ If called interactively, select CITEKEY using `citar-select-refs'."
   (interactive (list (car (citar-select-refs))) org-mode)
   (org-node--add-to-property-keep-space "ROAM_REFS" (concat "@" citekey)))
 
+;; TODO 2025-03-24: Have a way for predefined user templates to have access to
+;; citar template fields
 (defun citar-org-node--create-capture-note (citekey entry)
   "Open or create org-node node for CITEKEY and ENTRY.
-This function calls `org-node-capture-target' specially by setting
-`org-node-proposed-title' and `org-node-proposed-id'.  (Both are used
-and required by `org-node-capture-target'.)
+This function calls `org-capture'.  Users can configure
+`org-capture-templates' to define the capture templates they prefer.
+After inserting the capture template, the \"ROAM_REFS\" property of the
+node will automatically be set.
 
-To configure the title of the new org-node node, set
-`citar-org-node-new-node-title-template'."
-  (let* ((org-node-proposed-title
+Additionally, in the `org-capture' menu is a fallback capture template:
+a basic template that calls `org-node-capture-target', which creates a
+new file.  The title of this org file is determined by
+`citar-org-node-new-node-title-template'.  The template will
+automatically be assigned to an available key if
+`citar-org-node-fallback-org-capture-template-key' is nil; otherwise,
+the value of that option will be used instead as the key."
+  (let* ((fallback-org-capture-key
+          (if (and citar-org-node-fallback-org-capture-template-key
+                   (stringp citar-org-node-fallback-org-capture-template-key)
+                   (= (length citar-org-node-fallback-org-capture-template-key) 1))
+              citar-org-node-fallback-org-capture-template-key
+            (citar-org-node--available-org-capture-key)))
+         (org-node-proposed-title
           (citar-format--entry citar-org-node-new-node-title-template entry))
-         (org-node-proposed-id (org-id-new)))
-    (org-node-capture-target)
+         (org-node-proposed-id (org-id-new))
+         (org-capture-templates
+          (append org-capture-templates
+                  `((,fallback-org-capture-key "Citar-org-node: Simple capture into new file"
+                                               plain (function org-node-capture-target) nil
+                                               :empty-lines 1)))))
+    (org-capture)
+    ;; TODO 2025-03-24: Check that calling this after `org-capture' ensures the
+    ;; property is set as expected.  If the point ends up outside the heading
+    ;; after `org-capture', perhaps we have to use capture hooks to ensure the
+    ;; property is set.
     (citar-org-node-add-ref citekey)))
 
 ;;; Minor mode

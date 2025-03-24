@@ -29,7 +29,13 @@
 (require 'citar)
 
 ;;; Options
+(defgroup citar-org-node nil
+  "Integration between org-node and citar."
+  :prefix "citar-org-node-"
+  :group 'org)
 
+(defcustom citar-org-node-new-node-title-template "${title}"
+  "The citar formatting template for newly created nodes.")
 
 ;;; Variables
 (defconst citar-org-node-notes-config
@@ -37,7 +43,8 @@
         :category 'org-node-node
         :hasitems #'citar-org-node-has-notes
         :items #'citar-org-node--get-candidates
-        :open #'citar-org-node-open-note)
+        :open #'citar-org-node-open-note
+        :create #'citar-org-node--create-capture-note)
   "Org-node configuration for citar notes backend.
 See `citar-notes-sources' for more details on configuration keys.")
 
@@ -118,6 +125,28 @@ See also `citar-org-node-notes-config'."
   (let ((id (substring-no-properties
              (car (split-string candidate-string)))))
     (org-node--goto (org-node-by-id id))))
+
+(defun citar-org-node-add-ref (citekey)
+  "Add CITEKEY to the nearest relevant property drawer.
+CITEKEY will be the value of the \"ROAM_REFS\" property.
+
+If called interactively, select CITEKEY using `citar-select-refs'."
+  (interactive (list (car (citar-select-refs))) org-mode)
+  (org-node--add-to-property-keep-space "ROAM_REFS" (concat "@" citekey)))
+
+(defun citar-org-node--create-capture-note (citekey entry)
+  "Open or create org-node node for CITEKEY and ENTRY.
+This function calls `org-node-capture-target' specially by setting
+`org-node-proposed-title' and `org-node-proposed-id'.  (Both are used
+and required by `org-node-capture-target'.)
+
+To configure the title of the new org-node node, set
+`citar-org-node-new-node-title-template'."
+  (let* ((org-node-proposed-title
+          (citar-format--entry citar-org-node-new-node-title-template entry))
+         (org-node-proposed-id (org-id-new)))
+    (org-node-capture-target)
+    (citar-org-node-add-ref citekey)))
 
 ;;; Minor mode
 (defvar citar-org-node--orig-source citar-notes-source)

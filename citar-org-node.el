@@ -174,13 +174,23 @@ remain the same."
          (index (mod hash-value (length sorted-available-keys))))
     (char-to-string (nth index sorted-available-keys))))
 
-(defun citar-org-node-add-ref (citekey)
-  "Add CITEKEY to the nearest relevant property drawer.
-CITEKEY will be the value of the \"ROAM_REFS\" property.
+(defun citar-org-node-add-refs (citekey-or-citekeys)
+  "Add CITEKEY-OR-CITEKEYS to the nearest relevant property drawer.
+CITEKEY-OR-CITEKEYS can either be a list of citekeys or a single
+citekey.  If it is a citekey it will be added to the value of the
+\"ROAM_REFS\" property.  If it is a list, each of those citekeys will be
+added to that property.
 
-If called interactively, select CITEKEY using `citar-select-refs'."
-  (interactive (list (car (citar-select-refs))) org-mode)
-  (org-node--add-to-property-keep-space "ROAM_REFS" (concat "@" citekey)))
+If called interactively, select CITEKEY-OR-CITEKEYS using
+`citar-select-refs'."
+  (interactive (list (citar-select-refs)) org-mode)
+  (pcase citekey-or-citekeys
+    ((pred listp)
+     (dolist (citekey citekey-or-citekeys)
+       (org-node--add-to-property-keep-space "ROAM_REFS" (concat "@" citekey))))
+    ((pred stringp)
+     (org-node--add-to-property-keep-space "ROAM_REFS" (concat "@" citekey-or-citekeys)))
+    (_ (error "CITEKEY-OR-CITEKEYS should be a string or a list of strings"))))
 
 ;; TODO 2025-03-24: Have a way for predefined user templates to have access to
 ;; citar template fields
@@ -217,7 +227,7 @@ the value of that option will be used instead as the key."
     ;; property is set as expected.  If the point ends up outside the heading
     ;; after `org-capture', perhaps we have to use capture hooks to ensure the
     ;; property is set.
-    (citar-org-node-add-ref citekey)))
+    (citar-org-node-add-refs citekey)))
 
 ;;; Minor mode
 (defvar citar-org-node--orig-source citar-notes-source)

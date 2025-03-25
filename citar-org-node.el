@@ -39,7 +39,7 @@
 
 ;; TODO 2025-03-24: More specific explanation for what templates and fields are,
 ;; and how to tell which fields are available and what they expand to?
-(defcustom citar-org-node-new-node-title-template "${title} by ${author} (${date})"
+(defcustom citar-org-node-new-node-title-template "${title} by ${author}"
   "The citar formatting template for titles of newly created nodes.
 For an example of what this string should look like and the possible
 fields, see `citar-templates'.  Configuring this variable also allows

@@ -6,7 +6,7 @@
 ;; URL: https://github.com/krisbalintona/citar-org-node
 ;; Keywords: tools
 ;; Package-Version: 0.2.1
-;; Package-Requires: ((emacs "25.1") (citar "1.1") (org-node "2.0.0") (ht "1.6"))
+;; Package-Requires: ((emacs "26.1") (citar "1.1") (org-node "2.0.0") (ht "1.6"))
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -230,6 +230,20 @@ the value of that option will be used instead as the key."
     ;; after `org-capture', perhaps we have to use capture hooks to ensure the
     ;; property is set.
     (citar-org-node-add-refs citekey)))
+
+(defun citar-org-node-open-resource (&optional prefix)
+  "Call `citar-open' on all citar citekeys associated with the node at point.
+If PREFIX is non-nil, prompts to select one or more of the citekeys to
+call `citar-open' on instead."
+  (interactive "P")
+  (if-let* ((citar-open-prompt t)
+            (node (org-node-at-point))
+            (refs (mapcar (lambda (s) (string-remove-prefix "@" s))
+                          (org-node-get-refs node))))
+      (citar-open (if prefix
+                      (citar-select-refs :filter (lambda (key) (member key refs)))
+                    refs))
+    (message "No ROAM_REFS or related resources for node at point")))
 
 ;;; Minor mode
 (defvar citar-org-node--orig-source citar-notes-source)

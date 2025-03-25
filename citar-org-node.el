@@ -223,7 +223,24 @@ the value of that option will be used instead as the key."
           (append org-capture-templates
                   `((,fallback-org-capture-key "Citar-org-node: Simple capture into new file"
                                                plain (function org-node-capture-target) nil
-                                               :empty-lines 1)))))
+                                               :empty-lines 1
+                                               ;; TODO 2025-03-25: Ideally, we
+                                               ;; give users the option for
+                                               ;; :immediate-finish nil and
+                                               ;; :jump-to-captured nil.
+                                               ;; However, without these
+                                               ;; settings, because
+                                               ;; `org-node-capture-target'
+                                               ;; calls `find-file' directly,
+                                               ;; the buffer where this function
+                                               ;; is called in ends up changing
+                                               ;; to the new file, as well as a
+                                               ;; new window (depending on the
+                                               ;; user's `display-buffer-alist')
+                                               ;; popping up.  Hence, these
+                                               ;; settings are a workaround.
+                                               :immediate-finish t
+                                               :jump-to-captured t)))))
     (org-capture)
     ;; TODO 2025-03-24: Check that calling this after `org-capture' ensures the
     ;; property is set as expected.  If the point ends up outside the heading

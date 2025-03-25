@@ -110,7 +110,7 @@ See `citar-file--get-notes' for an example implementation.
 See also `citar-org-node-notes-config'."
   (let ((node-info (ht-map (lambda (ref-path ref-type)
                              (let* ((id (gethash ref-type org-node--ref<>id))
-                                    (node (gethash id org-node--id<>node))
+                                    (node (org-node-by-id id))
                                     (title (org-node-get-title node)))
                                ;; Final list elements are:
                                (list id ref-path title)))

@@ -40,6 +40,10 @@
 ;; For more information on how this package affects citar variables, read the
 ;; docstring of `citar-org-node-mode'.
 
+;; If you would like to see a certain feature not already present in the package
+;; or discover a bug, please open an issue in the project page or reach out to
+;; the package author's email.
+
 ;;; Code:
 (require 'citar)
 (require 'org-node)

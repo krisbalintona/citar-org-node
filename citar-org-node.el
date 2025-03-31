@@ -281,18 +281,35 @@ call `citar-open' on instead."
 (defvar citar-org-node--orig-source citar-notes-source)
 
 (defun citar-org-node--setup ()
-  "Register and select the citar-org-node notes backend."
+  "Register and select the citar-org-node notes backend.
+Register the citar-org-node notes source backend using
+`citar-register-notes-source' and setting `citar-notes-source'."
   (citar-register-notes-source 'citar-org-node citar-org-node-notes-config)
   (setq citar-notes-source 'citar-org-node))
 
 (defun citar-org-node--teardown ()
-  "Restore citar notes backend to what is what before."
+  "Restore citar notes backend to what is what before.
+Remove the citar-org-node backend using and restore the value of
+`citar-notes-source' before `citar-org-node-mode' was enabled (or
+`citar-org-node--setup' was called)."
   (setq citar-notes-source citar-org-node--orig-source)
   (citar-remove-notes-source 'citar-org-node))
 
 ;;;###autoload
 (define-minor-mode citar-org-node-mode
-  "Toggle org-node integration with citar."
+  "Toggle org-node integration with citar.
+When enabling this mode, the citar-org-node notes source backend is
+registered.  When disabling this mode, the notes source backend is
+removed and the previous notes source backend is restored.  (For more
+information on how this is accomplished, visit `citar-org-node--setup'
+and `citar-org-node--teardown'.)
+
+Org-node associates nodes to bibliographic references using the
+\"ROAM_REFS\" property (stored in org-mode's property drawers).  With
+this minor mode, citar will become aware of org-node nodes with a
+corresponding bibliographic reference.  Such nodes will become the
+associated \"note\" for that reference.  References can have multiple
+notes."
   :global t
   :group 'org-node
   :lighter " citar-org-node"

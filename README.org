@@ -3,6 +3,10 @@
 
 This package integrates [[https://github.com/meedstrom/org-node][org-node]] with the popular bibliographic management package, [[https://github.com/emacs-citar/citar][citar]].
 
+Org-node associates nodes to bibliographic references using the "ROAM_REFS" property (stored in org-mode's property drawers). With ~citar-org-node-mode~, citar will become aware of org-node nodes with a corresponding bibliographic reference. Such nodes will become the associated "note" for that reference. Additionally, references can have multiple notes.
+
+If you would like to see a certain feature not already present in the package or discover a bug, please open an issue in the project page or reach out to the package author's email: krisbalintona@gmail.com.
+
 * Table of contents
 :PROPERTIES:
 :TOC:      :include all :force (nothing) :ignore (this) :local (nothing)

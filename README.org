@@ -43,7 +43,20 @@ Alternatively, if you an Emacs version of at least 29.1, you can use ~package-vc
 
 Enable ~citar-org-node-mode~ and simply use citar as normal! Citar will be aware of your nodes associated with bibliographic references (via the =ROAM_REFS= property).
 
-To see all commands available, do =C-h a citar-org-node- RET=, or =M-x apropos-command citar-org-node- RET=.
+Citar-org-node offers several useful commands. To see them, do =C-h a citar-org-node- RET=, or =M-x apropos-command citar-org-node- RET=.
+
+Below is a sample configuration for new users to get started:
+#+begin_src emacs-lisp
+  (use-package citar-org-node
+    :vc ( :url "https://github.com/krisbalintona/citar-org-node.git"
+          :rev :newest)
+    :after (:any citar org-node)
+    :bind ( :map org-mode-map
+            ("C-c b a" . citar-org-node-add-refs)
+            ("C-c b o" . citar-org-node-open-resource))
+    :config
+    (citar-org-node-mode 1))
+#+end_src
 
 ** Options
 :PROPERTIES:

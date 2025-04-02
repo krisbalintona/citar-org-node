@@ -105,7 +105,7 @@ See `citar-notes-sources' for more details on configuration keys.")
 
 `org-node--ref-path<>ref-type' stores refs of any type (e.g., citekeys,
 https).  This function removes (non-destructively) non-citekey pairs
-from the hash table, returning the result.
+from the hash table, returning the resulting hash table.
 
 The optional argument CITEKEYS should be a list of org-node
 ref-paths (i.e. citekeys).  If non-nil, only the keys-value pairs whose

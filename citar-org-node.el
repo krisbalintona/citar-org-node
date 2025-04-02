@@ -113,6 +113,8 @@ keys are in this list will be included in the final hash table."
   (when (and citekeys (not (listp citekeys)))
     (error "CITEKEYS should be a list"))
   (let ((filtered-hash-table (make-hash-table :test #'equal)))
+    ;; If CITEKEYS is non-nil, then instead of filtering to all citekey
+    ;; references, then filter to all references associated with CITEKEYS
     (if citekeys
         (maphash (lambda (ref-path ref-type)
                    (when (member ref-path citekeys)

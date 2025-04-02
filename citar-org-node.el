@@ -112,21 +112,20 @@ ref-paths (i.e. citekeys).  If non-nil, only the keys-value pairs whose
 keys are in this list will be included in the final hash table."
   (when (and citekeys (not (listp citekeys)))
     (error "CITEKEYS should be a list"))
-  (let ((filtered-hash-table (make-hash-table :test #'equal)))
-    ;; If CITEKEYS is non-nil, then instead of filtering to all citekey
-    ;; references, then filter to all references associated with CITEKEYS
-    (if citekeys
-        (maphash (lambda (ref-path ref-type)
-                   (when (member ref-path citekeys)
-                     (puthash ref-path ref-type filtered-hash-table)))
-                 org-node--ref-path<>ref-type)
-      (setq filtered-hash-table org-node--ref-path<>ref-type))
-    (ht-select (lambda (ref-path ref-type)
-                 ;; 2025-03-31: For now (org-node version 2.4.1), refs prefixed
-                 ;; with a "@" are citation references.  If that changes in the
-                 ;; future, this predicate should change as well.
-                 (string-equal ref-type (concat "@" ref-path)))
-               filtered-hash-table)))
+  (ht-select (lambda (ref-path ref-type)
+               ;; 2025-04-02: Org-node v3 changed the ref-path and ref-type
+               ;; format of citations in `org-node--ref-path<>ref-type'.
+               ;; Formally, the ref-path would be the citekey and the ref-type
+               ;; would be the citekey prepended with a "@".  As of writing
+               ;; this, the ref-path is unchanged (citekeys) but the ref-type is
+               ;; now nil for citations.
+               (and (member ref-path citekeys)
+                    ;; 2025-04-02: Currently, the ref-type of citations is nil.
+                    ;; This clause ensures that the ref-path of a non-citation
+                    ;; is not identical to a citekey of ours.  This should be
+                    ;; possible, though unlikely.
+                    (not ref-type)))
+             org-node--ref-path<>ref-type))
 
 (defun citar-org-node--get-candidates (&optional citekeys)
   "Return hash table mapping of CITEKEYS to completion candidates.
@@ -142,8 +141,11 @@ with their files.
 See `citar-file--get-notes' for an example implementation.
 
 See also `citar-org-node-notes-config'."
-  (let ((node-info (ht-map (lambda (ref-path ref-type)
-                             (let* ((id (gethash ref-type org-node--ref<>id))
+  (let ((node-info (ht-map (lambda (ref-path _ref-type)
+                             ;; 2025-04-02: There is no org-node alias for
+                             ;; `indexed-roam--ref<>id'; is it a mistake to use
+                             ;; an indexed-specific variable?
+                             (let* ((id (gethash (concat "@" ref-path) indexed-roam--ref<>id))
                                     (node (org-node-by-id id))
                                     (title (org-node-get-title node)))
                                ;; Final list elements are:

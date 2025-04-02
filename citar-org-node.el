@@ -200,6 +200,7 @@ remain the same."
          (index (mod hash-value (length sorted-available-keys))))
     (char-to-string (nth index sorted-available-keys))))
 
+;;;###autoload
 (defun citar-org-node-add-refs (citekey-or-citekeys)
   "Add CITEKEY-OR-CITEKEYS to the nearest relevant property drawer.
 CITEKEY-OR-CITEKEYS can either be a list of citekeys or a single
@@ -272,6 +273,7 @@ the value of that option will be used instead as the key."
     ;; property is set.
     (citar-org-node-add-refs citekey)))
 
+;;;###autoload
 (defun citar-org-node-open-resource (&optional prefix)
   "Call `citar-open' on all citar citekeys associated with the node at point.
 If PREFIX is non-nil, prompts to select one or more of the citekeys to

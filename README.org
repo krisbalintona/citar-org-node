@@ -58,6 +58,8 @@ Below is a sample configuration for new users to get started:
     (citar-org-node-mode 1))
 #+end_src
 
+Org-node has changed the internal representation of citations across its versions, requiring different handling for other versions. This is likely the cause of any problems citar-org-node has discovering notes associated with bibliographic references. If you discover such problems, please open a [[https://github.com/krisbalintona/citar-org-node/issues][GitHub issue]].
+
 ** Options
 :PROPERTIES:
 :CUSTOM_ID: options

@@ -122,6 +122,9 @@ keys are in this list will be included in the final hash table."
                  org-node--ref-path<>ref-type)
       (setq filtered-hash-table org-node--ref-path<>ref-type))
     (ht-select (lambda (ref-path ref-type)
+                 ;; 2025-03-31: For now (org-node version 2.4.1), refs prefixed
+                 ;; with a "@" are citation references.  If that changes in the
+                 ;; future, this predicate should change as well.
                  (string-equal ref-type (concat "@" ref-path)))
                filtered-hash-table)))
 

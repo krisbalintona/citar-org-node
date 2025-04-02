@@ -65,6 +65,7 @@
 ;; and how to tell which fields are available and what they expand to?
 (defcustom citar-org-node-new-node-title-template "${title} by ${author}"
   "The citar formatting template for titles of newly created nodes.
+
 For an example of what this string should look like and the possible
 fields, see `citar-templates'.  Configuring this variable also allows
 citar to expand more fields, corresponding to bibliography file fields.
@@ -74,6 +75,7 @@ See also `citar-org-node-fallback-org-capture-template-key'."
 
 (defcustom citar-org-node-fallback-org-capture-template-key nil
   "Key used in the `org-capture' menu for the fallback template.
+
 This should be a single letter string like that used in
 `org-capture-templates'.  This key will be assigned to the fallback
 capture template of citar-org-node: a basic call to
@@ -94,11 +96,13 @@ be chosen (see `citar-org-node--available-org-capture-key')."
         :open #'citar-org-node-open-note
         :create #'citar-org-node--create-capture-note)
   "Org-node configuration for citar notes backend.
+
 See `citar-notes-sources' for more details on configuration keys.")
 
 ;;; Functions
 (defun citar-org-node--get-citekey-refs (&optional citekeys)
   "Return `org-node--ref-path<>ref-type' with only citekeys.
+
 `org-node--ref-path<>ref-type' stores refs of any type (e.g., citekeys,
 https).  This function removes (non-destructively) non-citekey pairs
 from the hash table, returning the result.
@@ -121,6 +125,7 @@ keys are in this list will be included in the final hash table."
 
 (defun citar-org-node--get-candidates (&optional citekeys)
   "Return hash table mapping of CITEKEYS to completion candidates.
+
 Return hash table whose CITEKEYS are elements of CITEKEYS and values are
 the propertized candidate used for completion.  (Note: this text will be
 the raw candidate text, but citar completion menus will show other
@@ -152,6 +157,7 @@ See also `citar-org-node-notes-config'."
 
 (defun citar-org-node-has-notes ()
   "Return function to check for notes.
+
 The returned function, when given a citekey, will return non-nil if
 there's an associated note.
 
@@ -165,6 +171,7 @@ See also `citar-org-node-notes-config'."
 
 (defun citar-org-node-open-note (candidate-string)
   "Open org-node node for CANDIDATE-STRING.
+
 CANDIDATE-STRING is the completion candidate returned by
 `citar-org-node--get-candidates'.
 
@@ -178,6 +185,7 @@ See also `citar-org-node-notes-config'."
 
 (defun citar-org-node--available-org-capture-key ()
   "Returns a key available for being bound in the `org-capture' menu.
+
 A \"key\" will be a single-letter string.
 
 Meant for use in `citar-org-node--create-capture-note' to dynamically
@@ -203,6 +211,7 @@ remain the same."
 ;;;###autoload
 (defun citar-org-node-add-refs (citekey-or-citekeys)
   "Add CITEKEY-OR-CITEKEYS to the nearest relevant property drawer.
+
 CITEKEY-OR-CITEKEYS can either be a list of citekeys or a single
 citekey.  If it is a citekey it will be added to the value of the
 \"ROAM_REFS\" property.  If it is a list, each of those citekeys will be
@@ -223,6 +232,7 @@ If called interactively, select CITEKEY-OR-CITEKEYS using
 ;; citar template fields
 (defun citar-org-node--create-capture-note (citekey entry)
   "Open or create org-node node for CITEKEY and ENTRY.
+
 This function calls `org-capture'.  Users can configure
 `org-capture-templates' to define the capture templates they prefer.
 After inserting the capture template, the \"ROAM_REFS\" property of the
@@ -276,6 +286,7 @@ the value of that option will be used instead as the key."
 ;;;###autoload
 (defun citar-org-node-open-resource (&optional prefix)
   "Call `citar-open' on all citar citekeys associated with the node at point.
+
 If PREFIX is non-nil, prompts to select one or more of the citekeys to
 call `citar-open' on instead."
   (interactive "P")
@@ -293,6 +304,7 @@ call `citar-open' on instead."
 
 (defun citar-org-node--setup ()
   "Register and select the citar-org-node notes backend.
+
 Register the citar-org-node notes source backend using
 `citar-register-notes-source' and setting `citar-notes-source'."
   (citar-register-notes-source 'citar-org-node citar-org-node-notes-config)
@@ -300,6 +312,7 @@ Register the citar-org-node notes source backend using
 
 (defun citar-org-node--teardown ()
   "Restore citar notes backend to what is what before.
+
 Remove the citar-org-node backend using and restore the value of
 `citar-notes-source' before `citar-org-node-mode' was enabled (or
 `citar-org-node--setup' was called)."
@@ -309,6 +322,7 @@ Remove the citar-org-node backend using and restore the value of
 ;;;###autoload
 (define-minor-mode citar-org-node-mode
   "Toggle org-node integration with citar.
+
 When enabling this mode, the citar-org-node notes source backend is
 registered.  When disabling this mode, the notes source backend is
 removed and the previous notes source backend is restored.  (For more
